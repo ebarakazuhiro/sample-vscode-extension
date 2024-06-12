@@ -15,7 +15,6 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.Uri.joinPath(context.extensionUri, "dist"),
           ],
           enableScripts: true,
-          enableCommandUris: true,
         }
       );
 
