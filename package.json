@@ -4,7 +4,7 @@
   "description": "",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.89.1"
+    "vscode": "^1.89.0"
   },
   "categories": [
     "Other"
@@ -14,9 +14,9 @@
   "contributes": {
     "commands": [
       {
-        "command": "catCoding.start",
-        "title": "Start cat coding session",
-        "category": "Cat Coding"
+        "command": "react.start",
+        "title": "Start react sample",
+        "category": "React Sample"
       }
     ]
   },
