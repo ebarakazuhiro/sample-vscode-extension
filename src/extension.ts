@@ -4,17 +4,26 @@ import * as vscode from "vscode";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand("catCoding.start", () => {
+    vscode.commands.registerCommand("react.start", () => {
       // Create and show panel
       const panel = vscode.window.createWebviewPanel(
-        "catCoding",
-        "Cat Coding",
+        "react",
+        "React Sample",
         vscode.ViewColumn.One,
-        {}
+        {
+          localResourceRoots: [
+            vscode.Uri.joinPath(context.extensionUri, "dist"),
+          ],
+          enableScripts: true,
+          enableCommandUris: true,
+        }
       );
 
       // And set its HTML content
-      panel.webview.html = getWebviewContent();
+      panel.webview.html = getWebviewContent(
+        panel.webview,
+        context.extensionUri
+      );
     })
   );
 }
@@ -22,7 +31,28 @@ export function activate(context: vscode.ExtensionContext) {
 // This method is called when your extension is deactivated
 export function deactivate() {}
 
-function getWebviewContent() {
+function getUri(
+  webview: vscode.Webview,
+  extensionUri: vscode.Uri,
+  pathList: string[]
+) {
+  return webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, ...pathList));
+}
+
+function getNonce() {
+  let text = "";
+  const possible =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (let i = 0; i < 32; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
+
+function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
+  const webviewUri = getUri(webview, extensionUri, ["dist", "webview.js"]);
+  const nonce = getNonce();
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,6 +62,7 @@ function getWebviewContent() {
 </head>
 <body>
   <div id="app"></div>
+  <script type="module" nonce="${nonce}" src="${webviewUri}"></script>
 </body>
 </html>`;
 }
