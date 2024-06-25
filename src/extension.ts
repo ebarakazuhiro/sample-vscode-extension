@@ -50,6 +50,8 @@ function getNonce() {
 
 function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
   const webviewUri = getUri(webview, extensionUri, ["dist", "webview.js"]);
+  const styleUri = getUri(webview, extensionUri, ["dist", "index.css"]);
+
   const nonce = getNonce();
 
   return `<!DOCTYPE html>
@@ -58,6 +60,7 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cat Coding</title>
+    <link href="${styleUri}" rel="stylesheet">
 </head>
 <body>
   <div id="app"></div>
