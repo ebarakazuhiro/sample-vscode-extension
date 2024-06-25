@@ -4,6 +4,8 @@
 
 const path = require("path");
 const webpack = require("webpack");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 //@ts-check
 /** @typedef {import('webpack').Configuration} WebpackConfig **/
@@ -20,6 +22,9 @@ const baseConfig = {
     new webpack.DefinePlugin({
       "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
     }),
+    new MiniCssExtractPlugin({
+      filename: "./src/index.css",
+    }),
   ],
   module: {
     rules: [
@@ -32,7 +37,14 @@ const baseConfig = {
           },
         ],
       },
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"],
+      },
     ],
+  },
+  optimization: {
+    minimizer: [new CssMinimizerPlugin()],
   },
   devtool: "nosources-source-map",
   infrastructureLogging: {
@@ -70,4 +82,14 @@ const webviewConfig = {
   },
 };
 
-module.exports = [extensionConfig, webviewConfig];
+/** @type WebpackConfig */
+const styleConfig = {
+  ...baseConfig,
+  entry: "./src/index.css",
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "index.css",
+  },
+};
+
+module.exports = [extensionConfig, webviewConfig, styleConfig];
